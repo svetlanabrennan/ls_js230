@@ -26,3 +26,15 @@ function getAllChildrenOf(parents) {
     .call(children))
     .reduce((collection, children) => collection.concat(children), []);
 }
+
+// without object destructuring
+// function getAllChildrenOf(parents) {
+//   return parents.map(parent => {
+//     let children = parent.children;
+//     return Array.prototype.slice.call(children)
+//   }).reduce((collection, children) => collection.concat(children), []);
+// }
+
+function getAllChildrenOf(parents) {
+  return parents.map(({ children }) => Array.prototype.slice.call(children))
+}
