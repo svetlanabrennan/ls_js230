@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Exercise 2</title>
+  <meta charset="utf-8" />
+  <script>
+    function getSchedules() {
+      let request = new XMLHttpRequest();
+
+      request.open('GET', 'http://localhost:3000/api/schedules');
+      request.timeout = 5000;
+      request.responseType = 'json';
+
+      request.addEventListener('load', () => {
+        let schedules = request.response;
+
+        if (schedules.length > 0) {
+          let count = {};
+          schedules.forEach(schedule => {
+            if (count[schedule.staff_id]) {
+              count[schedule.staff_id] += 1;
+            } else {
+              count[schedule.staff_id] = 1;
+            }
+          });
+
+          let result = Object.entries(count).map(schedule => {
+            return `Staff ${schedule[0]}: ${schedule[1]}`;
+          }).join("\n");
+
+          alert(result);
+        } else {
+          alert("There are currently no schedules available for booking.")
+        }
+      });
+
+      request.addEventListener("timeout", event => {
+        alert("It's taking longer than usual, please try again later");
+      });
+
+      request.addEventListener("loadend", event => {
+        alert("The request has been completed.");
+      });
+
+      request.send();
+    }
+  </script>
+</head>
+
+</html>

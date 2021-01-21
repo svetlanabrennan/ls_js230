@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Schedules</title>
+  <meta charset="utf-8" />
+  <style>
+    label {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Schedules</h1>
+  <form action="/api/bookings" method="post" id="booking-form">
+    <label>
+      Please select one schedule
+      <select name="availSchedules" id="availSchedules"></select>
+    </label>
+    <label>
+      Email:
+      <input type="email" name="email" id="email">
+      <input type="submit" value="Submit">
+    </label>
+  </form>
+
+  <script>
+
+    let scheduleList = document.querySelector("#availSchedules");
+    let openSchedules;
+
+    let form = document.querySelector('#booking-form');
+
+    (() => {
+      let request = new XMLHttpRequest();
+      request.open("GET", "/api/schedules");
+      request.responseType = 'json';
+      request.send();
+
+      request.addEventListener("load", event => {
+        openSchedules = request.response;
+
+        openSchedules = openSchedules.filter(schedule => !schedule.student_email);
+
+        let staffs = [];
+        (() => {
+          let request = new XMLHttpRequest();
+          request.open("GET", "/api/staff_members");
+          request.responseType = 'json';
+          request.send();
+
+          request.addEventListener("load", event => {
+            staffs = request.response;
+            openSchedules = convertIdsToNames(openSchedules, staffs);
+            fillScheduleList(openSchedules);
+          });
+
+        })();
+
+      });
+    })();
+
+    // Don't need to check if the email exists as registered student in API - adding a student will check for that and return an error if it's not found in registered student list
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      let formData = new FormData(form);
+      let json = JSON.stringify(formDataToJson(formData));
+
+      let request = new XMLHttpRequest();
+      request.open("POST", form.action);
+      request.setRequestHeader("Content-Type", "application/json")
+      request.send(json);
+
+      request.addEventListener("load", event => {
+
+      });
+    });
+
+    function formDataToJson(formData) {
+      console.log(formData);
+      for (const pair of formData.entries()) {
+        json[pair[0]] = pair[1];
+      }
+      return json;
+    }
+
+    // when user add emails address, check if student exists in api
+    // hit submit button
+    // retrieve all studnet in the api
+    // if input email doesn't exist in this list of schdules, show alert message and show form for creawting new student
+    // submit new student info
+    // submit schedule booking form
+
+    function convertIdsToNames(schedules, staffs) {
+      function getStaffName(id, staffs) {
+        return staffs.filter(staff => staff.id === id)[0].name;
+      }
+
+      schedules.forEach(schedule => {
+        schedule.staff_id = getStaffName(schedule.staff_id, staffs);
+      });
+
+      return schedules;
+    }
+
+    function fillScheduleList(schedules) {
+      schedules.forEach(schedule => {
+        let option = document.createElement("option");
+        option.setAttribute('value', schedule.id);
+        option.textContent = `${schedule.staff_id} | ${schedule.date} | ${schedule.time}`
+        scheduleList.appendChild(option);
+      });
+    }
+
+
+
+
+
+  </script>
+</body>
+
+</html>
