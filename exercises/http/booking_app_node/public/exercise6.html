@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Exercise 6</title>
+  <meta charset="utf-8" />
+</head>
+
+<body>
+  <h1>Bookings</h1>
+  <script>
+
+
+
+
+
+    // for each bullet list add a listener for when the bullet item is clicked
+    // prevent default
+    // open a new XML request with a GET to /api/bookings/:date
+    // pass the clicked li to the GET path
+    // when the event loads
+    // parse the response into an array
+    // for each booking, add a new list item, use the booking response as the text and add sublist under current parent list that was clicked on
+
+
+    // when the bullet item is clicked, show the sub list of booking details
+    // booking details are staff name student email and time booked
+
+    // let dates;
+
+    // let list = document.createElement("ul");
+    // document.body.appendChild(list);
+
+    // let request = new XMLHttpRequest();
+    // request.open("GET", "/api/bookings");
+    // request.addEventListener("load", event => {
+    //   dates = JSON.parse(request.response);
+    //   dates.forEach(date => {
+    //     let dateItem = document.createElement("li");
+    //     dateItem.textContent = date;
+    //     list.appendChild(dateItem);
+    //   });
+    // });
+    // request.send();
+
+    // document.addEventListener("click", event => {
+    //   let tag = event.target.tagName;
+
+    //   if (tag === "LI") {
+    //     let listClicked = event.target;
+    //     let itemDate = listClicked.textContent;
+    //     let request2 = new XMLHttpRequest();
+    //     request2.open("GET", `/api/bookings/${itemDate}`);
+
+    //     request2.addEventListener("load", event => {
+    //       let bookingDetails = JSON.parse(request2.response);
+    //       let subList = document.createElement("ul");
+    //       bookingDetails.forEach(booking => {
+    //         let subItem = document.createElement("li");
+    //         subItem.textContent = `${booking[0]} | ${booking[1]} | ${booking[2]}`;
+    //         subList.appendChild(subItem);
+    //       });
+    //       listClicked.appendChild(subList);
+    //     });
+    //     request2.send();
+
+    //   }
+    // });
+
+    // refactored
+
+    let list = document.createElement("ul");
+    document.body.appendChild(list);
+
+    (() => {
+      let request = new XMLHttpRequest();
+      request.open("GET", "/api/bookings");
+      request.responseType = "json";
+      request.send();
+
+      request.addEventListener("load", event => {
+        let dates = request.response;
+        createBookingList(dates);
+      });
+    })();
+
+
+    document.addEventListener("click", event => {
+      let tag = event.target.tagName;
+
+      if (tag === "LI") {
+
+        let request2 = new XMLHttpRequest();
+        request2.open("GET", `/api/bookings/${event.target.textContent}`);
+        request2.responseType = "json";
+        request2.send();
+
+        request2.addEventListener("load", event2 => {
+          let bookingDetails = request2.response;
+          createBookingDetails(bookingDetails, event.target);
+        });
+      }
+    });
+
+    function createBookingList(data) {
+      data.forEach(date => {
+        let dateItem = document.createElement("li");
+        dateItem.textContent = date;
+        list.appendChild(dateItem);
+      });
+    }
+
+    function createBookingDetails(data, target) {
+      let subList = document.createElement("ul");
+      data.forEach(booking => {
+        let subItem = document.createElement("li");
+        subItem.textContent = `${booking[0]} | ${booking[1]} | ${booking[2]}`;
+        subList.appendChild(subItem);
+      });
+      target.appendChild(subList);
+    }
+
+
+  </script>
+
+</body>
+
+</html>

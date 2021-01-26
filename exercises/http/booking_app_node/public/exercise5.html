@@ -8,26 +8,32 @@
     label {
       display: block;
     }
+
+    #newStudentForm {
+      background-color: rgb(136, 136, 136);
+      padding: 10px;
+      margin-top: 25px;
+    }
   </style>
 </head>
 
 <body>
   <h1>Schedules</h1>
-  <form action="/api/bookings" method="post" id="booking-form">
+  <form method="post" action="/api/bookings" id="booking-form">
     <label>
       Please select one schedule
-      <select name="availSchedules" id="availSchedules"></select>
+      <select name="id" id="id"></select>
     </label>
     <label>
       Email:
-      <input type="email" name="email" id="email">
+      <input type="email" name="student_email" id="student_email">
       <input type="submit" value="Submit">
     </label>
   </form>
 
   <script>
 
-    let scheduleList = document.querySelector("#availSchedules");
+    let scheduleList = document.querySelector("#id");
     let openSchedules;
 
     let form = document.querySelector('#booking-form');
@@ -69,28 +75,52 @@
 
       let request = new XMLHttpRequest();
       request.open("POST", form.action);
-      request.setRequestHeader("Content-Type", "application/json")
+      request.setRequestHeader("Content-Type", "application/json");
       request.send(json);
 
       request.addEventListener("load", event => {
+        switch (request.status) {
+          case 204:
+            alert('Booked');
+            window.location.href = "/exercise5.html"
+            break;
+          case 404:
+            alert(request.responseText);
+            bookingSequence = request.responseText.split(':')[1].trim();
+            bookingTemplate(bookingSequence);
 
+            let newStudentForm = document.querySelector("#newStudentForm");
+            newStudentForm.addEventListener("submit", event => {
+              event.preventDefault();
+              let request2 = new XMLHttpRequest();
+              let formData2 = new FormData(newStudentForm);
+              let json2 = JSON.stringify(formDataToJson(formData2));
+
+              request2.open("POST", newStudentForm.action);
+              request2.setRequestHeader("Content-Type", "application/json");
+              request2.send(json2);
+
+              request2.addEventListener('load', event => {
+                alert(request2.responseText);
+                if (request2.status === 201) {
+                  newStudentForm.reset();
+                  formData.set('student_email', formData2.get('email'));
+                  form.dispatchEvent(new Event('submit', { cancelable: true }));
+                }
+              });
+            });
+        }
       });
     });
 
     function formDataToJson(formData) {
-      console.log(formData);
+      const json = {};
       for (const pair of formData.entries()) {
         json[pair[0]] = pair[1];
       }
+
       return json;
     }
-
-    // when user add emails address, check if student exists in api
-    // hit submit button
-    // retrieve all studnet in the api
-    // if input email doesn't exist in this list of schdules, show alert message and show form for creawting new student
-    // submit new student info
-    // submit schedule booking form
 
     function convertIdsToNames(schedules, staffs) {
       function getStaffName(id, staffs) {
@@ -113,10 +143,53 @@
       });
     }
 
+    function bookingTemplate(sequence) {
+      let newStudentForm = document.createElement("form");
+      newStudentForm.setAttribute("action", "/api/students");
+      newStudentForm.setAttribute("method", "POST");
+      newStudentForm.setAttribute("id", "newStudentForm");
+
+      let h1 = document.createElement("h1");
+      h1.textContent = "Please provide new student details";
+      newStudentForm.appendChild(h1);
+
+      let emailLabel = document.createElement("label");
+      emailLabel.textContent = "Email ";
+      let emailInput = document.createElement("input");
+      emailInput.setAttribute("type", "email");
+      emailInput.setAttribute("name", "email");
+      emailInput.setAttribute("id", "email");
+      emailInput.setAttribute("value", form["student_email"].value);
+      emailLabel.appendChild(emailInput);
+      newStudentForm.appendChild(emailLabel);
+
+      let nameLabel = document.createElement("label");
+      nameLabel.textContent = "Name ";
+      let nameInput = document.createElement("input");
+      nameInput.setAttribute("type", "text");
+      nameInput.setAttribute("name", "name");
+      nameInput.setAttribute("id", "name");
+      nameLabel.appendChild(nameInput);
+      newStudentForm.appendChild(nameLabel);
+
+      let bookingSeqLabel = document.createElement("label");
+      bookingSeqLabel.textContent = "Booking Sequence ";
+      let bookingInput = document.createElement("input");
+      bookingInput.setAttribute("type", "text");
+      bookingInput.setAttribute("name", "booking_sequence");
+      bookingInput.setAttribute("id", "booking_sequence");
+      bookingInput.setAttribute("value", sequence);
+      bookingSeqLabel.appendChild(bookingInput);
+      newStudentForm.appendChild(bookingSeqLabel);
 
 
+      let subButton = document.createElement("input");
+      subButton.setAttribute("type", "submit");
+      subButton.setAttribute("value", "Submit");
+      newStudentForm.appendChild(subButton);
 
-
+      document.body.appendChild(newStudentForm);
+    }
   </script>
 </body>
 
