@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>your page title goes here</title>
+  <meta charset="utf-8" />
+  <style>
+
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+  <ul>
+    <li><a href="#" data-block="gold">Gold Sponsors</a></li>
+    <li><a href="#" data-block="silver">Silver Sponsors</a></li>
+    <li><a href="#" data-block="bronze">Bronze Sponsors</a></li>
+  </ul>
+
+  <article data-block="gold">
+    <h1>Gold Sponsors</h1>
+  </article>
+
+  <article data-block="silver">
+    <h1>Silver Sponsors</h1>
+  </article>
+
+  <article data-block="bronze">
+    <h1>Bronze Sponsors</h1>
+  </article>
+
+  <div id="gold" data-block="gold">
+    <h1>Gold Sponsors</h1>
+  </div>
+
+  <script>
+    $('a').on('click', function (e) {
+      e.preventDefault();
+
+      $('article').hide().filter('[data-block=' + $(this).attr('data-block') + ']').show();
+    });
+
+    var gold = document.getElementById('gold');
+    console.table(gold.dataset);
+
+
+  </script>
+</body>
+
+</html>
