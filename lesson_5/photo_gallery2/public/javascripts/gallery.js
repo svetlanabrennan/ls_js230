@@ -2,28 +2,27 @@ document.addEventListener("DOMContentLoaded", () => {
   let templates = {}; // obj referring to each handlebar script
   let photos; // array of objects for each photo
 
-  // don't know how LS got to this solution/code
   document.querySelectorAll("script[type='text/x-handlebars']").forEach(temp => {
     templates[temp["id"]] = Handlebars.compile(temp["innerHTML"]);
   });
 
-  // don't know how LS got to this solution/code
   document.querySelectorAll("[data-type='partial']").forEach(temp => {
     Handlebars.registerPartial(temp["id"], temp["innerHTML"]);
   });
 
-  // this is getting the photos info from the api
+  // get the photos data
   fetch("/photos")
     .then(response => response.json())
     .then(json => {
-      // this assigned the photos variable the response (json object)
       photos = json;
-      // firstPhoto = photos[0].id
 
       // add the photos data to handlerbars html template and display below slides section
       renderPhotos();
 
+      // hide all photos
       hideOtherPhotos();
+
+      // unhide the first photo
       document.querySelector("#slides figure").classList.remove("hide");
       document.querySelector("#slides figure").classList.add("current");
 
@@ -40,6 +39,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
   prevAnchor.addEventListener("click", event => prevSlide());
   nextAnchor.addEventListener("click", event => nextSlide());
+
+  // increment the value of likes and favorites and display value in button
+  document.querySelector("section > header").addEventListener("click", event => {
+    event.preventDefault();
+
+    let button = event.target;
+    let buttonType = button.getAttribute("data-property");
+
+    if (buttonType) {
+      let data = button.getAttribute("data-id");
+      let href = button.getAttribute("href");
+      let text = button.textContent;
+
+      fetch(href, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        },
+        body: 'photo_id=' + data
+      })
+        .then(response => response.json())
+        .then(json => {
+          button.textContent = text.replace(/\d+/, json.total);
+        });
+    }
+  });
+
+  // submit form with comments and add to comments section
+  let form = document.querySelector("form");
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+
+    let data = new FormData(form);
+    let currentSlideId = document.querySelector(".current").getAttribute("data-id");
+    data.set("photo_id", currentSlideId);
+
+    fetch("/comments/new", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      },
+      body: new URLSearchParams([...data])
+    })
+      .then(response => response.json())
+      .then(json => {
+        let comments_list = document.querySelector("#comments ul");
+        comments_list.insertAdjacentHTML("beforeend", templates.photo_comment(json));
+        form.reset();
+      });
+  });
 
   // find previous slide and show it
   function prevSlide() {
@@ -85,55 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
     getComments(slideId);
   }
 
-
-
-  // document.addEventListener("click", event => {
-  //   if (event.target.className === "prev") {
-  //     console.log(photos)
-
-  //     currentPhoto = document.querySelector(".current");
-  //     let prev;
-
-  //     document.querySelector(".current").classList.remove("current");
-
-  //     if (currentPhoto.previousElementSibling === null) {
-  //       prev = photos[photos.length - 1].id;
-  //     } else {
-  //       prev = currentPhoto.previousElementSibling.getAttribute('data-id');
-  //     }
-
-  //     document.querySelector("section > header").replaceChildren();
-  //     renderPhotoInformation(prev);
-  //     addCurrentClass(prev);
-
-  //     document.querySelector("#comments ul").replaceChildren();
-  //     getComments(prev);
-  //   }
-
-  //   if (event.target.className === "next") {
-  //     currentPhoto = document.querySelector(".current");
-  //     console.log(currentPhoto);
-  //     let next;
-
-  //     document.querySelector(".current").classList.add("hide");
-  //     document.querySelector(".current").classList.remove("current");
-
-  //     if (currentPhoto.nextElementSibling === null) {
-  //       next = photos[0].id;
-  //     } else {
-  //       next = currentPhoto.nextElementSibling.getAttribute('data-id');
-  //     }
-
-  //     document.querySelector("section > header").replaceChildren();
-  //     renderPhotoInformation(next);
-  //     addCurrentClass(next);
-
-  //     document.querySelector("#comments ul").replaceChildren();
-  //     getComments(next);
-  //   }
-
-  // });
-
   // display comments for selected photo
   function getComments(id) {
     fetch("/comments?photo_id=" + id)
@@ -147,12 +147,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // add photos to slides section
   function renderPhotos() {
     let slides = document.querySelector("#slides");
-
-    // this is grabbing the photos script from the templates and inserting the photos variable that contains the json photos data and assigning it to a new photos property - it's the same as doing this console.log(templates.photos({ photos })) - they both return a string representation of the html with photo data
-    // templates.photos({ photos: photos })
-
-    // is this shorthand for new property assignment { photos: photos }
-    // this inserts the photos script filled with html of each photo at the end of the slides element
     slides.insertAdjacentHTML("beforeend", templates.photos({ photos: photos }));
   }
 
@@ -182,5 +176,4 @@ document.addEventListener("DOMContentLoaded", () => {
     let header = document.querySelector("section > header");
     header.insertAdjacentHTML('beforeend', templates.photo_information(photo));
   }
-
 });
