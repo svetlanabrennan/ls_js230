@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Sign Up</title>
+  <meta charset="utf-8" />
+  <title>Sign Up</title>
+  <!-- <script src="jquery.js"></script> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="signup.css">
+</head>
+
+<body>
+  <h1>Sign Up Form</h1>
+  <form aciton="#" method="post" novalidate class="styled-form top-to-bottom">
+    <p class="form_errors"></p>
+    <fieldset>
+      <label>
+        First Name
+        <input type="text" name="first_name" id="first_name" required></input>
+        <span class="error_message"></span>
+      </label>
+
+      <label>
+        Last Name
+        <input type="text" name="last_name" id="last_name" required></input>
+        <span class="error_message"></span>
+      </label>
+
+      <label>
+        Email
+        <input type="text" required="" name="email" id="email" placeholder="someone@example.com" pattern=".+@.+">
+        <span class="error_message"></span>
+      </label>
+
+      <label>
+        Password
+        <input type="password" name="password" id="password" pattern=".{10,}" required>
+        <span class="error_message"></span>
+      </label>
+
+      <label>
+        Phone Number
+        <input type="text" name="phone" id="phone" pattern="\d{3}-\d{3}-\d{4}" placeholder="111-222-3333">
+        <span class="error_message"></span>
+      </label>
+
+      <label id="credit">
+        Credit Card
+        <div>
+          <input type="text" name="credit_card" id="cc1" minlength="4" maxlength="4">
+          <span>-</span>
+          <input type="text" name="credit_card" id="cc2" minlength="4" maxlength="4">
+          <span>-</span>
+          <input type="text" name="credit_card" id="cc3" minlength="4" maxlength="4">
+          <span>-</span>
+          <input type="text" name="credit_card" id="cc4" minlength="4" maxlength="4">
+          <span class="error_message"></span>
+          <!-- </div> -->
+
+      </label>
+
+      <button type="submit">Sign Up</button>
+
+    </fieldset>
+  </form>
+
+  <div id="serialized">
+    <h3>Serialized Form</h3>
+  </div>
+
+  <script src="signup.js"></script>
+</body>
+
+</html>
+
+<!-- note: not sure what the invalid field classes do or email classes -->

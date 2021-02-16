@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Multiple Choice Quiz</title>
+  <meta charset="utf-8" />
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="quiz.css">
+
+</head>
+
+<body>
+  <main>
+    <h1>Multiple Choice Quiz</h1>
+
+    <form action="#" method="post">
+      <fieldset>
+
+      </fieldset>
+      <input type="submit" value="Submit Quiz" id="submit" />
+      <input type="reset" value="Reset" id="reset" />
+    </form>
+
+
+  </main>
+
+  <script id='questionTemplate' type='text/x-handlebars'>
+    <div class="question" data-id="{{id}}">
+      <p id="description">Q{{id}}. {{{description}}}</p>
+      {{#each options}}
+      <label>
+        <input name="{{../id}}" type="radio" value="{{this}}" />
+        {{.}}
+      </label>
+      {{/each}}
+      <p id="result"></p>
+      </div>
+      </script>
+  <script src="quiz.js"></script>
+</body>
+
+</html>

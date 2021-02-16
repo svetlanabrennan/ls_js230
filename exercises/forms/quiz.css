@@ -1,0 +1,48 @@
+main {
+  margin: 0 auto;
+  width: 650px;
+}
+
+fieldset {
+  border: none;
+}
+
+label {
+  display: block;
+}
+
+.correct {
+  border: 1px solid green;
+  padding: 10px 5px;
+}
+
+.incorrect {
+  border: 1px solid red;
+  padding: 10px 5px;
+}
+
+
+input[type="submit"], input[type="reset"] {
+  padding: 5px 15px;
+  border-radius: 4px;
+  border: none;
+  font-size: 18px;
+}
+
+.reset_btn {
+  background-color: rgb(78, 208, 78);
+}
+
+input[type="submit"] {
+  background-color: rgb(78, 208, 78);
+}
+
+input[type="reset"] {
+  background-color: rgb(206, 206, 206);
+}
+
+input[type="submit"]:disabled {
+  background-color: rgb(206, 206, 206);
+  color: black;
+}
+
