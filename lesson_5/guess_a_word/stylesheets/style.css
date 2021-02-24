@@ -9,6 +9,7 @@ body {
 main {
   background-color: white;
   width: 800px;
+  padding: 20px;
 }
 
 #tree {
@@ -22,12 +23,18 @@ main {
 #apples {
   background: transparent url("../images/apples.png") 0 0 no-repeat;
   display: block;
-  /* z-index: 1; */
   width: 374px;
   height: 322px;
   margin: 0 auto;
   margin-top: 20px;
 }
+
+#apples.guess_1 { background-position: 0 -322px; }
+#apples.guess_2 { background-position: 0 -644px; }
+#apples.guess_3 { background-position: 0 -966px; }
+#apples.guess_4 { background-position: 0 -1288px; }
+#apples.guess_5 { background-position: 0 -1610px; }
+#apples.guess_6 { display: none; }
 
 #spaces {
   margin: 0 0 40px 0;
@@ -47,9 +54,20 @@ span {
   margin: 0 5px;
   vertical-align: bottom;
   margin-bottom: 10px;
+  font-size: 28px;
+  text-align: center;
+  padding-bottom: 5px;
 }
 
-#message {
+.hide {
   margin-top: 20px;
   display: none;
+}
+
+.show {
+  display: block;
+}
+
+p {
+  font-size: 18px;
 }

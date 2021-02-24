@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
       getComments(photos[0].id)
     });
 
-
   let prevAnchor = document.querySelector(".prev");
   let nextAnchor = document.querySelector(".next");
 

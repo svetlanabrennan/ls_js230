@@ -1,0 +1,121 @@
+body {
+  margin: 0;
+  font-family: Helvetica, Arial, "sans-serif";
+}
+
+h1 {
+  margin: 0;
+  font-size: 35px;
+  padding-top: 30px;
+  font-weight: 500;
+}
+
+#header {
+  background-color: #5B4282;
+  color: white;
+  text-align: center;
+  height: 137px
+}
+
+#header p {
+  font-weight: 100;
+  font-size: 20px;
+  margin-top: 12px;
+}
+
+#menu {
+  width: 96%;
+  margin: 0 auto;
+  background-color: #F5F5F5;
+  border-radius: 5px;
+  height: 85px;
+  border: 1px solid rgb(242, 242, 242);
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+#menu div {
+  width: 50%;
+}
+
+
+#add-contact {
+  font-size: 18px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 1px solid #5B4282;
+  color: #5B4282;
+}
+
+#search {
+  padding: 7px 10px;
+  border-radius: 5px;
+  border: 1px solid #b1b1b1;
+  font-size: 14px;
+}
+
+#contactsContainer {
+  display: flex;
+  width: 95%;
+  margin: 0 auto;
+}
+
+/* #contactsContainer div {
+  width: 25%;
+} */
+
+.individualContact {
+  width: 25%;
+  margin: 20px 15px;
+}
+
+.individualContact:after {
+  border-bottom: 1px solid rgb(237, 237, 237);
+  content: "";
+  display: block;
+  margin: 20px 0;
+}
+
+h4 {
+  margin: 0;
+}
+
+#contactsContainer p {
+  margin: 7px 0;
+  font-size: 15px;
+}
+
+/* Style buttons */
+.btn {
+  background-color: white;
+  border: 1px solid #5B4282;
+  color: #5B4282;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-top: 15px;
+}
+
+/* Darker background on mouse-over */
+.btn:hover, #add-contact:hover {
+  background-color: #5B4282;
+  color: white;
+}
+
+.tags {
+  width: 100%;
+  margin-top: 10px;
+}
+
+#tag {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #d2d2d2
+}
+
+#tag:hover {
+  background-color: #d2d2d2;
+}
