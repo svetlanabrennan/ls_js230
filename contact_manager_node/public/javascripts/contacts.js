@@ -5,31 +5,31 @@ $(function () {
 
       // input field contains a value
       if (searchedName.length > 0) {
-        let foundContacts = contactsList.filter(contact => {
+        let foundContacts = app.contactsAPI.contactsList.filter(contact => {
           let name = contact.full_name.toLowerCase();
           return name.includes(searchedName);
         });
 
         // searched value exists in contains
         if (foundContacts.length > 0) {
-          contactsAPI.checkContactList(foundContacts);
+          app.contactsAPI.checkContactList(foundContacts);
         } else {
           $('#contactsContainer').hide();
           $('#no-contacts-found').show();
-          templatesAPI.noContactsFoundTemplate(searchedName);
+          app.templatesAPI.noContactsFoundTemplate(searchedName);
         }
         // input field is empty
       } else {
         $('#no-contacts-found').hide();
         $('#contactsContainer').show();
-        contactsAPI.displayAllContacts();
+        app.contactsAPI.displayAllContacts();
       }
     }
 
     handleTagClick() {
       let tagName = event.target.textContent.trim().toLowerCase();
 
-      let foundContactsByTag = contactsList.filter(contact => {
+      let foundContactsByTag = app.contactsAPI.contactsList.filter(contact => {
         let tags = contact.tags;
         if (typeof tags === "object") {
           tags = tags.map(tag => tag.toLowerCase());
@@ -39,16 +39,16 @@ $(function () {
         return tags.includes(tagName);
       });
 
-      contactsAPI.checkContactList(foundContactsByTag);
+      app.contactsAPI.checkContactList(foundContactsByTag);
     }
 
     handleFormSubmit() {
       event.preventDefault();
-      contactsAPI.addContact();
+      app.contactsAPI.addContact();
       $('.create-contact-form')[0].reset();
       $('.create-contact').hide();
       $('#contactsContainer').show();
-      contactsAPI.displayAllContacts();
+      app.contactsAPI.displayAllContacts();
     }
 
     handleFormUpdate() {
@@ -70,7 +70,7 @@ $(function () {
       $('.create-contact-form')[0].reset();
       $('.update-contact').hide();
       $('#contactsContainer').show();
-      contactsAPI.displayAllContacts();
+      app.contactsAPI.displayAllContacts();
     }
 
     cancelForm() {
@@ -80,7 +80,7 @@ $(function () {
       $('.create-contact').hide();
       $('.update-contact').hide();
       $('#contactsContainer').show();
-      contactsAPI.displayAllContacts();
+      app.contactsAPI.displayAllContacts();
     }
 
     deleteContact() {
@@ -91,7 +91,7 @@ $(function () {
         fetch('http://localhost:3000/api/contacts/' + id, {
           method: 'DELETE',
         });
-        contactsAPI.displayAllContacts();
+        app.contactsAPI.displayAllContacts();
       } else {
         return false;
       }
@@ -118,24 +118,28 @@ $(function () {
 
     resetFilters() {
       event.preventDefault();
-      contactsAPI.displayAllContacts();
+      app.contactsAPI.displayAllContacts();
     }
   }
 
   class ManageContacts {
+    constructor() {
+      this.contactsList;
+    }
+
     displayAllContacts() {
       fetch('http://localhost:3000/api/contacts')
         .then(response => response.json())
         .then(json => {
-          contactsList = json;
-          this.checkContactList(contactsList)
+          this.contactsList = json;
+          this.checkContactList(this.contactsList)
         });
     }
 
     checkContactList(list) {
       if (list.length > 0) {
         this.splitTags(list);
-        templatesAPI.createContactTemplate(list);
+        app.templatesAPI.createContactTemplate(list);
       } else {
         $('#contactsContainer').hide();
         $('#no-contacts').show();
@@ -195,24 +199,35 @@ $(function () {
     }
   }
 
-  let contactsAPI = new ManageContacts();
-  let eventsAPI = new HandleEvents();
-  let templatesAPI = new ManageTemplates();
+  class UI {
+    constructor() {
+      this.contactsAPI = new ManageContacts();
+      this.eventsAPI = new HandleEvents();
+      this.templatesAPI = new ManageTemplates();
+    }
 
-  let contactsList;
-  contactsAPI.displayAllContacts();
+    init() {
+      this.contactsAPI.displayAllContacts();
+      this.enableEvents();
+    }
 
-  let $contactsContainer = $("#contactsContainer");
-  $contactsContainer.on("click", "button.deleteBtn", eventsAPI.deleteContact);
-  $contactsContainer.on("click", "button.editBtn", eventsAPI.editForm);
+    enableEvents() {
+      let $contactsContainer = $("#contactsContainer");
+      $contactsContainer.on("click", "button.deleteBtn", this.eventsAPI.deleteContact);
+      $contactsContainer.on("click", "button.editBtn", this.eventsAPI.editForm);
 
-  $('.add-contact').on("click", contactsAPI.addCreateContactForm);
-  $('.cancelBtn').on("click", eventsAPI.cancelForm);
+      $('.add-contact').on("click", this.contactsAPI.addCreateContactForm);
+      $('.cancelBtn').on("click", this.eventsAPI.cancelForm);
 
-  $('.create-contact-form').on("submit", eventsAPI.handleFormSubmit);
-  $('.update-contact-form').on("submit", eventsAPI.handleFormUpdate);
+      $('.create-contact-form').on("submit", this.eventsAPI.handleFormSubmit);
+      $('.update-contact-form').on("submit", this.eventsAPI.handleFormUpdate);
 
-  $contactsContainer.on("click", "button.tag", eventsAPI.handleTagClick);
-  $('#search').on("keyup", eventsAPI.handleSearch);
-  $('#clearFilters').on("click", eventsAPI.resetFilters);
+      $contactsContainer.on("click", "button.tag", this.eventsAPI.handleTagClick);
+      $('#search').on("keyup", this.eventsAPI.handleSearch);
+      $('#clearFilters').on("click", this.eventsAPI.resetFilters);
+    }
+  }
+
+  let app = new UI();
+  app.init();
 });
