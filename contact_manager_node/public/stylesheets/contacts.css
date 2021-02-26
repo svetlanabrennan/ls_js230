@@ -10,6 +10,11 @@ h1 {
   font-weight: 500;
 }
 
+/* remove blue outline when element is in focus*/
+*:focus {
+  outline:none !important
+}
+
 #header {
   background-color: #5B4282;
   color: white;
@@ -39,8 +44,13 @@ h1 {
   width: 50%;
 }
 
+#searchArea {
+  display: grid;
+  margin-top: 25px;
+}
 
-#add-contact {
+
+.add-contact {
   font-size: 18px;
   padding: 10px 20px;
   border-radius: 5px;
@@ -55,18 +65,45 @@ h1 {
   font-size: 14px;
 }
 
-#contactsContainer {
-  display: flex;
-  width: 95%;
-  margin: 0 auto;
+#search, #clearFilters {
+  width: 25%;
 }
 
-/* #contactsContainer div {
-  width: 25%;
-} */
+#clearFilters {
+  text-align: left;
+  padding-top: 10px;
+  margin: 0 0 10px 5px;
+  font-size: 12px;
+}
+
+#no-contacts {
+  display: none;
+  width: 90%;
+  background-color: #F5F5F5;
+  border: 1px solid rgb(242, 242, 242);
+  margin: 40px 40px 75px 70px;
+  padding: 25px 0;
+}
+
+#no-contacts div {
+  text-align: center;
+}
+
+#contactsContainer {
+  display: grid;
+  width: 95%;
+  margin: 0 auto;
+  grid-auto-rows: min-content;
+  grid-template-areas:
+    "individualContact individualContact individualContact individualContact";
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
 
 .individualContact {
-  width: 25%;
+  /* width: 25%;
+   */
+  /* flex: 1 1 auto; */
+  /* flex: 25%; */
   margin: 20px 15px;
 }
 
@@ -100,7 +137,7 @@ h4 {
 }
 
 /* Darker background on mouse-over */
-.btn:hover, #add-contact:hover {
+.btn:hover, .add-contact:hover {
   background-color: #5B4282;
   color: white;
 }
@@ -110,12 +147,96 @@ h4 {
   margin-top: 10px;
 }
 
-#tag {
+.tag {
   padding: 5px 10px;
   border-radius: 5px;
   border: 1px solid #d2d2d2
 }
 
-#tag:hover {
+.tag:hover {
   background-color: #d2d2d2;
+}
+
+.create-contact, .update-contact {
+  width: 96%;
+  margin: 0 auto;
+  display: none;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  padding-bottom: 35px;
+}
+
+.create-contact h2, .update-contact h2 {
+  font-size: 30px;
+  border-bottom: 1px solid rgb(228, 228, 228);
+  padding-bottom: 15px;
+  width: 95%;
+}
+
+.create-contact p, .update-contact p {
+  font-size: 10px;
+  width: 100%;
+  text-align: center;
+  margin-left: 90px;
+}
+
+#create-contact-form {
+  width: 100%;
+  text-align: center;
+}
+
+.line label {
+  display: inline-block;
+  width: 150px;
+  text-align: right;
+  padding-right: 10px;
+  font-weight: 600;
+}
+
+.line input, select {
+  margin: 15px 0;
+  line-height: 35px;
+  width: 350px;
+  border-radius: 5px;
+  border: 1px solid #b1b1b1;
+}
+
+#tags {
+  margin-top: 0;
+}
+
+.line button {
+  width: 170px;
+  margin: 10px 0;
+  height: 45px;
+  font-size: 18px;
+  box-sizing: border-box;
+}
+
+.line button:first-of-type {
+  margin-right: 15px;
+}
+
+#no-contacts-found {
+  display: none;
+  text-align: center;
+  width: 90%;
+  background-color: #F5F5F5;
+  border: 1px solid rgb(242, 242, 242);
+  margin: 40px 40px 75px 40px;
+  padding: 25px 0;
+}
+
+footer {
+  width: 95%;
+  display: flex;
+  margin: 0 auto;
+  border-top: 1px solid rgb(228, 228, 228);
+  padding-top: 10px;
+}
+
+footer p {
+  width: 100%;
+  text-align: center;
 }
